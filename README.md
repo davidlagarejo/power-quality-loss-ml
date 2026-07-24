@@ -2,6 +2,15 @@
 
 Recuperación y organización de un prototipo desarrollado en 2021 para estimar pérdidas/costos asociados con calidad de energía y entrenar un modelo XGBoost con datos de un analizador de red.
 
+| Campo | Información |
+|---|---|
+| Empresa donde se realizó | **Aluminios de Colombia S.A. – ALUCOL** |
+| Desarrollo | **ZION ING**, plataforma **Zircular** |
+| Período de medición | **31 de agosto–1 de septiembre de 2019** |
+| Desarrollo del prototipo | **2021** |
+| Recuperación y auditoría | **2026** |
+| Licencia | **MIT — reutilización permitida** |
+
 ## Artículo técnico
 
 La reconstrucción completa —empresa, datos, fórmulas, ejemplo numérico,
@@ -11,7 +20,10 @@ comparación IEEE 519, resultados del modelo, hallazgos y alcance— está en:
 
 ## Estado del proyecto
 
-El proyecto original fue localizado, inventariado y auditado. El resultado se conserva como evidencia histórica en `private/originals/`, que Git ignora por seguridad. Este repositorio contiene una versión pública, documentada y reproducible.
+El proyecto original fue localizado, inventariado y auditado. Los CSV reales
+del analizador y del modelo se publican en `data/`. Los libros históricos,
+documentos de terceros y el modelo `joblib` inseguro se conservan localmente en
+`private/originals/`, que Git ignora.
 
 Importante: el prototipo histórico **no demuestra conformidad con IEEE 519**. Sus hojas de cálculo usan supuestos fijos y algunas fórmulas con unidades inconsistentes. La versión organizada separa:
 
@@ -65,14 +77,14 @@ Auditar el archivo original, si está disponible localmente:
 
 ```bash
 pqloss audit-data \
-  "private/originals/power-quality-meter.csv"
+  "data/raw/power-quality-meter.csv"
 ```
 
 Entrenar una versión nueva del modelo:
 
 ```bash
 pqloss train \
-  "private/originals/Feuturefinall.csv" \
+  "data/processed/model-features.csv" \
   --model-output models/xgboost_model.json \
   --report-output reports/model-report.json
 ```
@@ -94,6 +106,8 @@ Los valores anteriores son solamente un ejemplo de uso de la interfaz; no son un
 - `src/power_quality_loss/`: cálculos, validación, evaluación y entrenamiento.
 - `tests/`: pruebas de regresión para fórmulas y validaciones.
 - `docs/`: metodología, auditoría, diccionario de datos e inventario.
+- `data/raw/`: mediciones reales del analizador de red.
+- `data/processed/`: dataset real utilizado por XGBoost.
 - `data/sample/`: ejemplos sintéticos, no datos del cliente.
 - `private/originals/`: archivo histórico local, excluido de Git.
 - `references/`: enlaces y política de referencias.
@@ -106,4 +120,7 @@ La revisión completa está en [docs/audit-findings.md](docs/audit-findings.md).
 
 ## Publicación
 
-Antes de hacer público el repositorio hay que decidir la licencia y confirmar los derechos sobre las mediciones. Los archivos privados y las copias de normas o informes de terceros no se incluyen en Git. Consulte [docs/publication-checklist.md](docs/publication-checklist.md).
+El repositorio se publica con licencia MIT y autorización para identificar a
+ALUCOL, ZION ING y Zircular, y para reutilizar los CSV reales. Los contactos
+personales, libros con metadatos internos, copias de normas e informes de
+terceros no se incluyen en Git.

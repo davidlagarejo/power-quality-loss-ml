@@ -1,21 +1,21 @@
-# Lista antes de publicar en GitHub
+# Estado de publicación en GitHub
 
 ## Obligatorio
 
-- [ ] Confirmar el propietario y la autorización de publicación de las
+- [x] Confirmar el propietario y la autorización de publicación de las
   mediciones del analizador.
-- [ ] Decidir si el repositorio será público o privado.
-- [ ] Elegir una licencia de software. Mientras no exista una, se reservan por
-  defecto todos los derechos.
+- [x] Publicar el repositorio como público.
+- [x] Aplicar licencia MIT para permitir reutilización.
 - [ ] Confirmar la moneda y la tarifa usadas en 2021.
 - [ ] Identificar el modelo/marca del analizador y las unidades exportadas.
-- [ ] Revisar nombres de personas y empresas en metadatos de Office.
-- [ ] Mantener fuera del repositorio normas IEEE e informes de terceros.
-- [ ] No publicar `modelo_XGBOOST.joblib`; volver a entrenar y usar JSON nativo.
+- [x] Revisar nombres de personas y empresas en metadatos de Office.
+- [x] Mantener fuera del repositorio normas IEEE e informes de terceros.
+- [x] No publicar `modelo_XGBOOST.joblib`; volver a entrenar y usar JSON nativo.
+- [x] Publicar los CSV reales sin datos personales.
 
 ## Recomendado
 
-- [ ] Publicar únicamente datos sintéticos o un conjunto anonimizado aprobado.
+- [x] Publicar los datos reales autorizados y conservar una muestra sintética.
 - [ ] Añadir fecha/hora al dataset de ML.
 - [ ] Medir corriente del neutro en lugar de generarla.
 - [ ] Capturar THD/TDD y armónicos individuales reales.
@@ -26,6 +26,6 @@
 
 ## Estado actual
 
-El repositorio está preparado de forma conservadora: el código y la
-documentación se pueden versionar; `private/`, `models/` y `reports/` se
-excluyen salvo sus archivos README.
+El código, la documentación y los CSV reales están aprobados para publicación.
+`private/`, `models/` y `reports/` continúan excluidos salvo sus archivos
+README.

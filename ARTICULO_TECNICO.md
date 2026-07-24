@@ -43,13 +43,16 @@ La evidencia recuperada identifica las siguientes organizaciones:
 | Autor organizacional de los libros | **ZION ING** | Metadatos `creator` de los Excel de desbalance, armónicos, corriente neutra y consolidación |
 | Modificación posterior | **Globaltgy Colombia** | Metadato `lastModifiedBy` de `Feuturefinall.xlsx` |
 
-Esta atribución requiere una precisión: el CSV recuperado contiene fecha,
-hora y variables eléctricas, pero **no contiene el nombre del cliente, planta,
-tablero o medidor**. Los informes que nombran a ALUCOL pertenecen al mismo
-entorno documental, pero corresponden a campañas de 2021; el CSV del prototipo
-corresponde a 2019. Por tanto, puede afirmarse que el proyecto está asociado al
-trabajo de ZION ING/Zircular para ALUCOL, pero no que las 2.343 filas del CSV
-sean de ALUCOL sin una confirmación documental adicional.
+El responsable del proyecto confirmó para esta publicación que el trabajo se
+realizó para **Aluminios de Colombia S.A. – ALUCOL**. El CSV recuperado
+corresponde a mediciones de 2019; la construcción de las hojas, variables y
+modelo se realizó principalmente en 2021. La recuperación y auditoría del
+proyecto se efectuó en 2026.
+
+El CSV no contiene dentro de sus columnas el nombre de la empresa, planta,
+tablero o medidor. La atribución empresarial se documenta a partir de la
+confirmación del responsable y de los informes de la plataforma conservados
+junto al proyecto.
 
 No se publican en este repositorio direcciones, teléfonos, correos ni nombres
 de contacto encontrados en los informes, porque no son necesarios para
@@ -96,9 +99,10 @@ física validada de pérdidas ni una prueba completa de cumplimiento normativo.
 | `Untitled.ipynb` | Notebook vacío | — |
 | `costo usuario servidor.xlsx` | Estimación de almacenamiento AWS | No central |
 
-Los archivos originales se conservaron en `private/originals/`, con hashes
-SHA-256, y se excluyeron de Git. La lista completa está en
-[`docs/source-inventory.md`](docs/source-inventory.md).
+Los dos CSV reales se publican en `data/raw/` y `data/processed/`. Los libros,
+notebooks, documentos de terceros y binarios originales se conservan en
+`private/originals/`, con hashes SHA-256, y se excluyen de Git. La lista
+completa está en [`docs/source-inventory.md`](docs/source-inventory.md).
 
 ---
 
@@ -699,9 +703,9 @@ source .venv/bin/activate
 python -m pip install -e ".[dev,xgboost]"
 pytest
 
-pqloss audit-data private/originals/power-quality-meter.csv
+pqloss audit-data data/raw/power-quality-meter.csv
 
-pqloss train private/originals/Feuturefinall.csv \
+pqloss train data/processed/model-features.csv \
   --model-output models/xgboost_model.json \
   --report-output reports/model-report.json
 ```

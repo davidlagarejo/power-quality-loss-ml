@@ -6,7 +6,9 @@ authors:
   - family-names: "Lagarejo"
     given-names: "David"
 version: 0.1.0
-date-released: 2026-07-23
+date-released: 2026-07-24
+license: MIT
+repository-code: "https://github.com/davidlagarejo/power-quality-loss-ml"
 abstract: >-
   Recuperación, auditoría y reimplementación reproducible de un prototipo de
   calidad de energía con datos de un analizador de red y XGBoost.
