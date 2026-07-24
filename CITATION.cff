@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "Si utiliza este repositorio, cite este trabajo."
+title: "Análisis de pérdidas por calidad de energía con machine learning"
+type: software
+authors:
+  - family-names: "Lagarejo"
+    given-names: "David"
+version: 0.1.0
+date-released: 2026-07-23
+abstract: >-
+  Recuperación, auditoría y reimplementación reproducible de un prototipo de
+  calidad de energía con datos de un analizador de red y XGBoost.
+keywords:
+  - power quality
+  - machine learning
+  - XGBoost
+  - IEEE 519
+  - energy losses

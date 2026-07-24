@@ -1,0 +1,27 @@
+.DS_Store
+.idea/
+.vscode/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv*/
+dist/
+build/
+*.egg-info/
+
+# Mediciones, modelos y documentos históricos: revisión antes de publicar.
+private/**
+!private/README.md
+models/**
+!models/README.md
+reports/**
+!reports/README.md
+
+# Salidas reproducibles.
+*.joblib
+*.pkl
+*.ubj
+*.model
+model-report.json
