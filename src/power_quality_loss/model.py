@@ -1,4 +1,4 @@
-"""Entrenamiento reproducible del modelo de costos."""
+"""Reproducible training for the cost model."""
 
 from __future__ import annotations
 
@@ -15,12 +15,12 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
 FEATURE_COLUMNS = (
-    "costoreactiva",
-    "costodesbalance",
-    "costoarmonicos",
-    "costocorrienteneutra",
+    "reactive_energy_cost",
+    "imbalance_cost",
+    "harmonic_cost",
+    "neutral_current_cost",
 )
-TARGET_COLUMN = "costolineabase"
+TARGET_COLUMN = "baseline_active_energy_cost"
 
 
 def load_model_data(path: str | Path) -> tuple[pd.DataFrame, pd.Series]:
@@ -28,13 +28,13 @@ def load_model_data(path: str | Path) -> tuple[pd.DataFrame, pd.Series]:
     required = [*FEATURE_COLUMNS, TARGET_COLUMN]
     missing = [column for column in required if column not in frame.columns]
     if missing:
-        raise ValueError(f"Faltan columnas requeridas: {', '.join(missing)}")
+        raise ValueError(f"Missing required columns: {', '.join(missing)}")
 
     numeric = frame[required].apply(pd.to_numeric, errors="coerce")
     if numeric.isna().any().any():
-        raise ValueError("El dataset contiene valores faltantes o no numéricos")
+        raise ValueError("The dataset contains missing or non-numeric values")
     if not np.isfinite(numeric.to_numpy()).all():
-        raise ValueError("El dataset contiene valores infinitos")
+        raise ValueError("The dataset contains infinite values")
     return numeric[list(FEATURE_COLUMNS)], numeric[TARGET_COLUMN]
 
 
@@ -43,12 +43,12 @@ def ordered_holdout(
     target: pd.Series,
     test_fraction: float = 0.2,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
-    """Divide por orden para respetar la secuencia temporal heredada."""
+    """Split by row order to preserve the inherited time sequence."""
 
     if not 0.05 <= test_fraction <= 0.5:
-        raise ValueError("test_fraction debe estar entre 0.05 y 0.5")
+        raise ValueError("test_fraction must be between 0.05 and 0.5")
     if len(features) != len(target) or len(features) < 10:
-        raise ValueError("Se requieren al menos 10 filas alineadas")
+        raise ValueError("At least 10 aligned rows are required")
     split_index = int(len(features) * (1.0 - test_fraction))
     return (
         features.iloc[:split_index].copy(),
@@ -62,7 +62,7 @@ def regression_metrics(actual: np.ndarray | pd.Series, predicted: np.ndarray) ->
     actual_array = np.asarray(actual, dtype=float)
     predicted_array = np.asarray(predicted, dtype=float)
     if actual_array.shape != predicted_array.shape:
-        raise ValueError("actual y predicted deben tener la misma forma")
+        raise ValueError("actual and predicted must have the same shape")
 
     absolute_error = np.abs(actual_array - predicted_array)
     nonzero = actual_array != 0.0
@@ -96,13 +96,13 @@ def train_xgboost(
     report_output: str | Path,
     test_fraction: float = 0.2,
 ) -> dict[str, Any]:
-    """Entrena XGBoost con un holdout ordenado y guarda modelo + métricas."""
+    """Train XGBoost with an ordered holdout and save model plus metrics."""
 
     try:
         import xgboost as xgb
-    except ImportError as exc:  # pragma: no cover - depende de instalación opcional
+    except ImportError as exc:  # pragma: no cover - depends on optional installation
         raise RuntimeError(
-            'XGBoost no está instalado. Use: python -m pip install -e ".[xgboost]"'
+            'XGBoost is not installed. Run: python -m pip install -e ".[xgboost]"'
         ) from exc
 
     data_path = Path(data_path)

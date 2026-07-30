@@ -11,7 +11,7 @@ dist/
 build/
 *.egg-info/
 
-# Mediciones, modelos y documentos históricos: revisión antes de publicar.
+# Historical measurements, models, and documents: review before publishing.
 private/**
 !private/README.md
 models/**
@@ -19,7 +19,7 @@ models/**
 reports/**
 !reports/README.md
 
-# Salidas reproducibles.
+# Reproducible outputs.
 *.joblib
 *.pkl
 *.ubj

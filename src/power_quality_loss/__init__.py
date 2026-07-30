@@ -1,4 +1,4 @@
-"""Herramientas auditables para el prototipo de calidad de energía."""
+"""Auditable tools for the power-quality prototype."""
 
 from .legacy import (
     HarmonicLegacyResult,

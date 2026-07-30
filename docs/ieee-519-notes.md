@@ -1,39 +1,38 @@
-# Notas para una evaluación IEEE 519
+# Notes for an IEEE 519 Assessment
 
-La edición activa localizada durante la revisión es IEEE 519-2022, publicada
-el 5 de agosto de 2022 y sucesora de IEEE 519-2014. La página oficial la
-describe como límites de distorsión de tensión y corriente en estado estable
-en el punto de acoplamiento común (PCC):
+The active edition located during the audit is IEEE 519-2022, published on
+August 5, 2022, and superseding IEEE 519-2014. Its official page describes
+steady-state voltage and current distortion limits at the point of common
+coupling (PCC):
 
 - [IEEE Standards Association — IEEE 519-2022](https://standards.ieee.org/ieee/519/10677/)
 
-## Diferencia entre el prototipo y una evaluación normativa
+## Difference between the prototype and a standards assessment
 
-El prototipo usa valores constantes de THD y no conoce formalmente el PCC. Una
-evaluación trazable debe registrar, como mínimo:
+The prototype uses constant THD values and does not formally identify the PCC.
+A traceable assessment should record at least:
 
-1. edición exacta de la norma y fecha de evaluación;
-2. ubicación del PCC;
-3. nivel de tensión nominal;
-4. THDv e individuales de tensión medidos en el PCC;
-5. TDD e individuales de corriente;
-6. corriente máxima de demanda `IL`;
-7. datos de cortocircuito y relación `Isc/IL` cuando correspondan;
-8. ventana estadística y período de observación;
-9. límites aplicables obtenidos de una copia autorizada;
-10. margen, estado de cumplimiento e incertidumbre de medición.
+1. exact standards edition and assessment date;
+2. PCC location;
+3. nominal voltage level;
+4. measured voltage THD and individual voltage harmonics at the PCC;
+5. current TDD and individual current harmonics;
+6. maximum demand current `IL`;
+7. short-circuit information and `Isc/IL` where applicable;
+8. statistical window and observation period;
+9. applicable limits selected from an authorized copy;
+10. margin, compliance result, and measurement uncertainty.
 
-## Diseño adoptado
+## Repository design
 
-El código no incorpora tablas numéricas de la norma. `ieee519.py` recibe el
-valor medido y el límite ya seleccionado por un profesional con acceso a la
-edición aplicable. Así se evita:
+The code does not embed numeric standards tables. `ieee519.py` receives a
+measured value and a limit already selected by a professional with access to
+the applicable edition. This avoids:
 
-- presentar como universal un límite que depende del contexto;
-- confundir THD de corriente con TDD;
-- copiar contenido normativo protegido;
-- afirmar conformidad sin la información necesaria.
+- presenting a context-dependent limit as universal;
+- confusing current THD with TDD;
+- copying protected standards content;
+- claiming compliance without the required information.
 
-La evaluación de límites y el cálculo de pérdidas deben permanecer separados:
-estar dentro o fuera de un límite de distorsión no determina automáticamente
-los kW perdidos.
+Limit assessment and loss calculation remain separate. Being inside or
+outside a distortion limit does not automatically determine lost kW.

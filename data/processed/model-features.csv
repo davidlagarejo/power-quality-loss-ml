@@ -1,4 +1,4 @@
-costoreactiva,costodesbalance,costoarmonicos,costocorrienteneutra,costolineabase
+reactive_energy_cost,imbalance_cost,harmonic_cost,neutral_current_cost,baseline_active_energy_cost
 36525,29610.9000000011,3.1392576,6339.2868,194775
 13200,37663.9999999992,3.2106564,4824.03,198900
 6750,51384.9999999991,3.24324,4151.52,204150

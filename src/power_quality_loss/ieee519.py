@@ -1,7 +1,7 @@
-"""Marco configurable para evaluar límites de distorsión en el PCC.
+"""Configurable framework for evaluating distortion limits at the PCC.
 
-No se copian tablas normativas. Los límites deben proceder de la edición
-aplicable de la norma, adquirida o consultada legítimamente por el usuario.
+No standards tables are copied. Limits must come from the applicable edition
+of the standard, obtained or consulted legitimately by the user.
 """
 
 from __future__ import annotations
@@ -31,21 +31,21 @@ class AssessmentContext:
     def missing_requirements(self) -> list[str]:
         missing: list[str] = []
         if not self.point_of_common_coupling_identified:
-            missing.append("punto de acoplamiento común (PCC)")
+            missing.append("point of common coupling (PCC)")
         if self.nominal_voltage_v is None:
-            missing.append("tensión nominal en el PCC")
+            missing.append("nominal voltage at the PCC")
         return missing
 
 
 def assess_percentage(metric: str, measured_pct: float, limit_pct: float) -> LimitAssessment:
-    """Compara una medición porcentual con un límite suministrado."""
+    """Compare a percentage measurement with a user-supplied limit."""
 
     measured_pct = float(measured_pct)
     limit_pct = float(limit_pct)
     if measured_pct < 0.0:
-        raise ValueError("La medición porcentual no puede ser negativa")
+        raise ValueError("The percentage measurement cannot be negative")
     if limit_pct <= 0.0:
-        raise ValueError("El límite debe ser mayor que cero")
+        raise ValueError("The limit must be greater than zero")
 
     return LimitAssessment(
         metric=metric,

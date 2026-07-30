@@ -1,29 +1,41 @@
-# Datos reales publicados
+# Published Real Data
 
-Los datos de este directorio pertenecen al prototipo realizado para
-**Aluminios de Colombia S.A. – ALUCOL**, dentro del trabajo desarrollado por
-**ZION ING** para la plataforma **Zircular**.
+The data in this directory belongs to the prototype performed for
+**Aluminios de Colombia S.A. – ALUCOL**, developed by **ZION ING** for the
+**Zircular** platform.
 
-## Archivos
+## Files
 
-| Ruta | Contenido | Período | Filas | SHA-256 |
+| Path | Content | Period | Rows | SHA-256 |
 |---|---|---|---:|---|
-| `raw/power-quality-meter.csv` | Exportación real del analizador de red | 2019-08-31 a 2019-09-01 | 2.343 | `5c837805238d6689ee3b5c8472d3c88447d6567039a14732741ba4b0c8b6e7ad` |
-| `processed/model-features.csv` | Variables económicas usadas por XGBoost | Derivadas del mismo conjunto | 2.343 | `8c1faabcee8d7a5f381ee43a33735c31d7c4dd097ae99f84382e2ca99e3b5d62` |
+| `raw/power-quality-meter.csv` | Real power-analyzer export | 2019-08-31 to 2019-09-01 | 2,343 | `5c837805238d6689ee3b5c8472d3c88447d6567039a14732741ba4b0c8b6e7ad` |
+| `processed/model-features.csv` | Real economic features used by XGBoost | Derived from the same dataset | 2,343 | `26763f3d1d01d2c7a29c32ccb052ecca72fd1359dcc9c4368945ab8a254947e6` |
 
-El prototipo y sus hojas de cálculo fueron desarrollados principalmente en
-2021. La recuperación, auditoría y reimplementación se realizaron en 2026.
+The processed CSV differs from the historical source only in its English
+header. All 2,343 numeric rows are unchanged.
 
-Los CSV no contienen nombres, direcciones, teléfonos ni correos electrónicos.
-Sí contienen mediciones operativas reales. Su publicación fue autorizada por
-el responsable del proyecto.
+The prototype and its workbooks were developed primarily in 2021. Recovery,
+audit, and reimplementation were completed in 2026.
 
-## Reutilización
+The CSV files contain no names, addresses, phone numbers, or email addresses.
+They do contain real operational measurements. Publication was authorized by
+the project owner.
 
-Salvo contenido identificado expresamente como perteneciente a terceros, el
-código, la documentación y estos datos se distribuyen bajo la licencia MIT del
-repositorio. Toda reutilización debe conservar el aviso de copyright y la
-licencia.
+## Historical-to-English feature mapping
 
-Las normas IEEE y los informes de terceros no forman parte del dataset ni se
-redistribuyen.
+| Historical field | Published field |
+|---|---|
+| `costoreactiva` | `reactive_energy_cost` |
+| `costodesbalance` | `imbalance_cost` |
+| `costoarmonicos` | `harmonic_cost` |
+| `costocorrienteneutra` | `neutral_current_cost` |
+| `costolineabase` | `baseline_active_energy_cost` |
+
+## Reuse
+
+Unless explicitly identified as third-party content, the code, documentation,
+and datasets are distributed under the repository’s MIT License. Reuse must
+retain the copyright notice and license.
+
+IEEE standards and third-party reports are not part of the dataset and are not
+redistributed.

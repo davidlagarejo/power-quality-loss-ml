@@ -1,4 +1,4 @@
-"""Validaciones básicas para exportaciones de analizadores de red."""
+"""Basic validation for power-analyzer exports."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def _robust_outlier_count(series: pd.Series, threshold: float = 12.0) -> int:
 
 
 def audit_measurements(frame: pd.DataFrame) -> dict[str, Any]:
-    """Devuelve conteos de problemas sin modificar los datos."""
+    """Return issue counts without modifying the data."""
 
     required = (
         *PHASE_VOLTAGE_COLUMNS,

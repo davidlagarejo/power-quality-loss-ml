@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "Si utiliza este repositorio, cite este trabajo."
-title: "Análisis de pérdidas por calidad de energía con machine learning"
+message: "If you use this repository, please cite this work."
+title: "Machine-learning analysis of power-quality losses"
 type: software
 authors:
   - family-names: "Lagarejo"
@@ -10,8 +10,8 @@ date-released: 2026-07-24
 license: MIT
 repository-code: "https://github.com/davidlagarejo/power-quality-loss-ml"
 abstract: >-
-  Recuperación, auditoría y reimplementación reproducible de un prototipo de
-  calidad de energía con datos de un analizador de red y XGBoost.
+  Recovery, audit, and reproducible reimplementation of a power-quality
+  prototype using power analyzer data and XGBoost.
 keywords:
   - power quality
   - machine learning

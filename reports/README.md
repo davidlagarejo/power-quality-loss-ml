@@ -1,5 +1,4 @@
-# Informes reproducibles
+# Reproducible Reports
 
-Esta carpeta recibe los reportes JSON generados durante auditoría y
-entrenamiento. Los resultados locales están excluidos de Git para evitar
-publicar datos o métricas sin revisión.
+Audit and training JSON reports are written here. Local outputs are ignored by
+Git so that metrics or data-derived artifacts are reviewed before publication.

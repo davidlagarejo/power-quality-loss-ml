@@ -1,70 +1,78 @@
-# Análisis de pérdidas por calidad de energía con ML
+# Power-Quality Loss Analysis with Machine Learning
 
-Recuperación y organización de un prototipo desarrollado en 2021 para estimar pérdidas/costos asociados con calidad de energía y entrenar un modelo XGBoost con datos de un analizador de red.
+Recovery, audit, and reproducible implementation of a 2021 prototype that
+estimated power-quality loss/cost indicators from power-analyzer data and
+trained an XGBoost model.
 
-| Campo | Información |
+| Field | Information |
 |---|---|
-| Empresa donde se realizó | **Aluminios de Colombia S.A. – ALUCOL** |
-| Desarrollo | **ZION ING**, plataforma **Zircular** |
-| Período de medición | **31 de agosto–1 de septiembre de 2019** |
-| Desarrollo del prototipo | **2021** |
-| Recuperación y auditoría | **2026** |
-| Licencia | **MIT — reutilización permitida** |
+| Company where the project was performed | **Aluminios de Colombia S.A. – ALUCOL** |
+| Development | **ZION ING**, **Zircular** platform |
+| Measurement period | **August 31–September 1, 2019** |
+| Prototype development | **2021** |
+| Recovery and technical audit | **2026** |
+| License | **MIT — reuse permitted** |
 
-## Artículo técnico
+## Technical article
 
-La reconstrucción completa —empresa, datos, fórmulas, ejemplo numérico,
-comparación IEEE 519, resultados del modelo, hallazgos y alcance— está en:
+The complete reconstruction—company context, data, formulas, worked example,
+IEEE 519 analysis, model results, findings, and demonstrated scope—is here:
 
-**[Leer el artículo técnico completo](ARTICULO_TECNICO.md)**
+**[Read the complete technical article](TECHNICAL_ARTICLE.md)**
 
-## Estado del proyecto
+## Project status
 
-El proyecto original fue localizado, inventariado y auditado. Los CSV reales
-del analizador y del modelo se publican en `data/`. Los libros históricos,
-documentos de terceros y el modelo `joblib` inseguro se conservan localmente en
-`private/originals/`, que Git ignora.
+The original project was located, inventoried, and audited. The real analyzer
+and ML datasets are published under `data/`. Historical workbooks, third-party
+documents, and the unsafe legacy `joblib` artifact remain in a private local
+archive and are excluded from Git.
 
-Importante: el prototipo histórico **no demuestra conformidad con IEEE 519**. Sus hojas de cálculo usan supuestos fijos y algunas fórmulas con unidades inconsistentes. La versión organizada separa:
+Important: the historical prototype **does not demonstrate IEEE 519
+compliance**. Its workbooks use fixed assumptions and contain formulas with
+inconsistent units. This repository separates:
 
-- cálculos históricos, identificados explícitamente como `legacy`;
-- pérdidas físicas con unidades claras cuando los datos disponibles lo permiten;
-- evaluación configurable contra límites suministrados por el usuario;
-- entrenamiento ML sin incluir la variable objetivo entre las entradas.
+- historical formulas, explicitly labeled `legacy`;
+- physical losses with clear units when the available data support them;
+- configurable comparison against user-supplied limits;
+- ML training that never includes the target among the input features.
 
-## Qué se recuperó
+## Recovered scope
 
-- 2.343 mediciones del analizador de red, tomadas entre el 31 de agosto y el 1 de septiembre de 2019;
-- hojas de cálculo de desbalance, armónicos, corriente neutra y costos;
-- un conjunto de cinco variables para machine learning;
-- un notebook de entrenamiento y un modelo XGBoost serializado;
-- documentación de apoyo sobre monitoreo y medición de calidad de energía.
+- 2,343 real analyzer measurements collected every 30 seconds from August 31
+  to September 1, 2019;
+- imbalance, harmonic, neutral-current, and economic-consolidation workbooks;
+- a five-column machine-learning dataset;
+- an XGBoost training notebook and serialized historical model;
+- supporting power-quality monitoring and measurement references.
 
-El modelo original usa cuatro entradas:
+The published model schema uses four inputs:
 
-1. `costoreactiva`
-2. `costodesbalance`
-3. `costoarmonicos`
-4. `costocorrienteneutra`
+1. `reactive_energy_cost`
+2. `imbalance_cost`
+3. `harmonic_cost`
+4. `neutral_current_cost`
 
-y trata de predecir `costolineabase`. Por tanto, el modelo predice un **costo base de energía activa**, no directamente los kW perdidos.
+and predicts `baseline_active_energy_cost`. The model therefore predicts a
+**baseline active-energy cost proxy**, not lost kW directly.
 
-## Flujo reconstruido
+## Reconstructed data flow
 
 ```mermaid
 flowchart LR
-    A["Analizador de red<br/>2.343 registros"] --> B["Cálculos en Excel"]
-    B --> C["Desbalance"]
-    B --> D["Armónicos"]
-    B --> E["Corriente neutra"]
-    C --> F["Consolidación económica"]
+    A["Power analyzer<br/>2,343 records"] --> B["Spreadsheet calculations"]
+    B --> C["Phase imbalance"]
+    B --> D["Harmonics"]
+    B --> E["Neutral current"]
+    C --> F["Economic consolidation"]
     D --> F
     E --> F
-    F --> G["Dataset de 4 variables + objetivo"]
+    F --> G["Four features + target"]
     G --> H["XGBoost"]
 ```
 
-## Inicio rápido
+## Quick start
+
+Python 3.10 or newer is required.
 
 ```bash
 python3 -m venv .venv
@@ -73,23 +81,28 @@ python -m pip install -e ".[dev,xgboost]"
 pytest
 ```
 
-Auditar el archivo original, si está disponible localmente:
+Audit the real analyzer export:
 
 ```bash
-pqloss audit-data \
-  "data/raw/power-quality-meter.csv"
+pqloss audit-data data/raw/power-quality-meter.csv
 ```
 
-Entrenar una versión nueva del modelo:
+Reproduce the complete audit and XGBoost training workflow:
+
+```bash
+python scripts/reproduce_project.py
+```
+
+Train the model directly:
 
 ```bash
 pqloss train \
-  "data/processed/model-features.csv" \
+  data/processed/model-features.csv \
   --model-output models/xgboost_model.json \
   --report-output reports/model-report.json
 ```
 
-Ejemplo de evaluación contra límites definidos por el usuario:
+Example comparison against user-supplied distortion limits:
 
 ```bash
 pqloss assess \
@@ -99,28 +112,42 @@ pqloss assess \
   --current-tdd-limit 8.0
 ```
 
-Los valores anteriores son solamente un ejemplo de uso de la interfaz; no son una tabla normativa incorporada.
+These percentages demonstrate the interface only; they are not embedded
+standards-table values.
 
-## Estructura
+## Repository layout
 
-- `src/power_quality_loss/`: cálculos, validación, evaluación y entrenamiento.
-- `tests/`: pruebas de regresión para fórmulas y validaciones.
-- `docs/`: metodología, auditoría, diccionario de datos e inventario.
-- `data/raw/`: mediciones reales del analizador de red.
-- `data/processed/`: dataset real utilizado por XGBoost.
-- `data/sample/`: ejemplos sintéticos, no datos del cliente.
-- `private/originals/`: archivo histórico local, excluido de Git.
-- `references/`: enlaces y política de referencias.
+- `src/power_quality_loss/`: formulas, validation, assessment, and training.
+- `scripts/reproduce_project.py`: complete English reproduction workflow.
+- `tests/`: regression tests for historical formulas and validation.
+- `docs/`: methodology, audit, data dictionary, and source inventory.
+- `data/raw/`: real power-analyzer measurements.
+- `data/processed/`: real XGBoost feature dataset with English headers.
+- `data/sample/`: synthetic examples for interface testing.
+- `private/originals/`: local historical archive, excluded from Git.
 
-## Resultados históricos y limitaciones
+## Results and limitations
 
-El notebook guardó MAE ≈ 22.408 y RMSE ≈ 31.661 en las unidades monetarias del dataset. Esos números no deben presentarse como desempeño certificado porque el experimento incluía problemas de validación, valores objetivo iguales a cero y una variante con fuga de la variable objetivo.
+The historical notebook recorded MAE ≈ 22,408 and RMSE ≈ 31,661 in the
+dataset’s monetary units. Those numbers are not certified performance because
+one experiment leaked the target, the target contained zero values, and the
+split randomly mixed adjacent observations.
 
-La revisión completa está en [docs/audit-findings.md](docs/audit-findings.md).
+The corrected ordered-holdout run produced:
 
-## Publicación
+| Metric | Result |
+|---|---:|
+| MAE | 39,277.72 |
+| RMSE | 91,180.71 |
+| R² | 0.7510 |
+| WAPE | 16.5912% |
+| sMAPE | 15.5218% |
 
-El repositorio se publica con licencia MIT y autorización para identificar a
-ALUCOL, ZION ING y Zircular, y para reutilizar los CSV reales. Los contactos
-personales, libros con metadatos internos, copias de normas e informes de
-terceros no se incluyen en Git.
+See [docs/audit-findings.md](docs/audit-findings.md) for the full audit.
+
+## Data and reuse
+
+The repository is published under the MIT License with authorization to name
+ALUCOL, ZION ING, and Zircular and to reuse the two real CSV datasets. Personal
+contacts, Office files with internal metadata, copies of IEEE standards, and
+third-party reports are not included.

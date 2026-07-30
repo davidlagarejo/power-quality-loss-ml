@@ -1,31 +1,30 @@
-# Estado de publicación en GitHub
+# GitHub Publication Status
 
-## Obligatorio
+## Completed
 
-- [x] Confirmar el propietario y la autorización de publicación de las
-  mediciones del analizador.
-- [x] Publicar el repositorio como público.
-- [x] Aplicar licencia MIT para permitir reutilización.
-- [ ] Confirmar la moneda y la tarifa usadas en 2021.
-- [ ] Identificar el modelo/marca del analizador y las unidades exportadas.
-- [x] Revisar nombres de personas y empresas en metadatos de Office.
-- [x] Mantener fuera del repositorio normas IEEE e informes de terceros.
-- [x] No publicar `modelo_XGBOOST.joblib`; volver a entrenar y usar JSON nativo.
-- [x] Publicar los CSV reales sin datos personales.
+- [x] Confirm ownership and authorization to publish analyzer measurements.
+- [x] Publish the repository publicly.
+- [x] Apply the MIT License to permit reuse.
+- [x] Review company and personal names in Office metadata.
+- [x] Keep IEEE standards and third-party reports out of the repository.
+- [x] Exclude `modelo_XGBOOST.joblib` and retrain to native JSON instead.
+- [x] Publish the authorized real CSV files without personal contact data.
+- [x] Retain a synthetic sample for interface testing.
+- [x] Publish English documentation, code, CLI messages, and dataset headers.
 
-## Recomendado
+## Remaining technical work
 
-- [x] Publicar los datos reales autorizados y conservar una muestra sintética.
-- [ ] Añadir fecha/hora al dataset de ML.
-- [ ] Medir corriente del neutro en lugar de generarla.
-- [ ] Capturar THD/TDD y armónicos individuales reales.
-- [ ] Documentar PCC, tensión nominal, `IL` e `Isc`.
-- [ ] Validar las ecuaciones de pérdidas con un ingeniero electricista.
-- [ ] Añadir una campaña independiente para evaluación fuera de muestra.
-- [ ] Crear una ficha del modelo con población, límites y riesgos.
+- [ ] Confirm the historical currency and 2021 rate.
+- [ ] Identify the analyzer make/model and confirm exported units.
+- [ ] Measure neutral current instead of generating it.
+- [ ] Capture real THD/TDD and individual harmonics.
+- [ ] Document PCC, nominal voltage, `IL`, and `Isc`.
+- [ ] Validate loss equations with an electrical engineer.
+- [ ] Add an independent out-of-sample campaign.
+- [ ] Create a model card covering population, limitations, and risks.
 
-## Estado actual
+## Current publication boundary
 
-El código, la documentación y los CSV reales están aprobados para publicación.
-`private/`, `models/` y `reports/` continúan excluidos salvo sus archivos
-README.
+Code, documentation, and the real CSV datasets are approved for publication.
+`private/`, generated `models/`, and generated `reports/` remain excluded
+except for their README files.

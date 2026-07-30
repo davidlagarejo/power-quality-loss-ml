@@ -1,99 +1,99 @@
-# Hallazgos de auditoría
+# Audit Findings
 
-Fecha de revisión: 23 de julio de 2026.
+Audit date: July 23, 2026.
 
-## Conclusión
+## Conclusion
 
-El material recuperado es un prototipo exploratorio valioso, pero no una
-calculadora certificada de kW perdidos ni una implementación completa de IEEE
-519. El flujo mezcla cálculos determinísticos en Excel con un modelo XGBoost
-que predice el costo de la línea base.
+The recovered material is a valuable exploratory prototype, but it is not a
+certified lost-kW calculator or a complete IEEE 519 implementation. The flow
+combines deterministic spreadsheet calculations with an XGBoost model that
+predicts baseline cost.
 
-## Hallazgos críticos
+## Critical findings
 
-### 1. El objetivo del modelo no son los kW perdidos
+### 1. The model target is not lost kW
 
-Las cuatro entradas son costos derivados y el objetivo `costolineabase`
-representa el costo de energía activa. El modelo aprende una relación
-económica entre columnas, no una ley física de pérdidas.
+The four inputs are derived costs, and the target represents active-energy
+baseline cost. The model learns an economic relationship between derived
+columns rather than a physical law of electrical loss.
 
-### 2. Fuga de la variable objetivo en un experimento
+### 2. Target leakage in one historical experiment
 
-Una celda del notebook incluye `costolineabase` dentro de `X` y también la usa
-como `y`. El puntaje de búsqueda de hiperparámetros asociado a ese experimento
-no es válido para medir generalización.
+One notebook cell included the target in `X` while also using it as `y`. The
+hyperparameter-search score from that experiment does not measure
+generalization.
 
-La versión organizada define únicamente estas entradas:
+The corrected implementation uses only:
 
-- `costoreactiva`
-- `costodesbalance`
-- `costoarmonicos`
-- `costocorrienteneutra`
+- `reactive_energy_cost`
+- `imbalance_cost`
+- `harmonic_cost`
+- `neutral_current_cost`
 
-### 3. La comparación histórica no implementa IEEE 519
+### 3. The historical comparison does not implement IEEE 519
 
-La hoja de armónicos asigna 3 % de THD de tensión y 2 % de THD de corriente a
-todas las filas. No son mediciones tomadas del CSV. Además:
+The harmonic workbook assigns 3% voltage THD and 2% current THD to every row.
+Those values were not measured in the published CSV. It also:
 
-- no identifica formalmente el punto de acoplamiento común (PCC);
-- no calcula TDD de corriente;
-- no incorpora la tensión nominal para seleccionar límites;
-- no incorpora `Isc/IL` o el contexto de cortocircuito/demanda;
-- no evalúa armónicos individuales.
+- does not formally identify the point of common coupling (PCC);
+- does not calculate current TDD;
+- does not retain nominal voltage for limit selection;
+- does not retain `Isc/IL` or short-circuit/demand context;
+- does not evaluate individual harmonic orders.
 
-### 4. Unidades incorrectas
+### 4. Incorrect units
 
-En `desbalance.xlsx`, tensión en V × corriente en A produce VA; después de
-aplicar factor de potencia produce W. La hoja rotula directamente el resultado
-como kW sin dividir por 1.000.
+In the imbalance workbook, voltage in V multiplied by current in A produces
+VA; applying power factor produces W. The workbook labels the result as kW
+without dividing by 1,000.
 
-La hoja de armónicos mezcla magnitudes en V, A y fracciones sin una unidad
-física consistente. Su resultado se conserva como un *score* histórico.
+The harmonic workbook mixes V, A, and dimensionless ratios. Its result is
+preserved as a historical score rather than physical power.
 
-### 5. Corriente del neutro sintética
+### 5. Synthetic neutral current
 
-Las hojas de corriente neutra usan `RANDBETWEEN` para generar valores entre
-límites observados y después aplican `I²R`. Al no existir semilla ni medición
-explícita del neutro, esa parte no es reproducible y no debe presentarse como
-medición real.
+The neutral-current workbooks use `RANDBETWEEN` to generate values and then
+apply `I²R`. Without a seed or an explicit neutral measurement, this branch is
+not reproducible and cannot be presented as measured behavior.
 
-## Hallazgos de datos
+## Data findings
 
-- 2.343 filas en el analizador y en el dataset final.
-- 17 filas con potencia activa igual a cero.
-- factores de potencia con valor 327,67, fuera del rango físico esperado.
-- valores de potencia de 4.915.050 en varias columnas, candidatos a error de
-  exportación o a un cambio de escala.
-- el costo final de corriente neutra no coincide con el libro de consolidación
-  en 2.325 de 2.343 filas; probablemente fue recalculado desde otra versión.
-- los libros de consolidación conservan enlaces externos rotos.
+- 2,343 rows in both the analyzer export and final ML dataset.
+- 17 rows with zero active power.
+- power-factor values of 327.67, outside the expected physical range.
+- power values of 4,915,050 in several columns, likely export or scale errors.
+- the final neutral-current cost differs from the consolidation workbook in
+  2,325 of 2,343 rows, most likely because it was recalculated from another
+  version.
+- the consolidation workbooks retain broken external links.
 
-## Evaluación original
+## Historical evaluation
 
-El notebook dejó registrados:
+The notebook recorded:
 
-- MAE: aproximadamente 22.408;
-- RMSE: aproximadamente 31.661;
-- MAPE: infinito;
-- “accuracy”: infinito negativo.
+- MAE: approximately 22,408;
+- RMSE: approximately 31,661;
+- MAPE: infinity;
+- “accuracy”: negative infinity.
 
-MAPE falla porque hay objetivos iguales a cero. La métrica RMSPE personalizada
-también aplica `expm1` a valores que no fueron transformados logarítmicamente.
-El código nuevo informa MAPE solo para objetivos no nulos, WAPE y sMAPE.
+MAPE fails because the target contains zero values. The custom RMSPE also
+applies `expm1` to values that were not log-transformed. The new code reports
+nonzero-target MAPE, WAPE, and sMAPE.
 
-## Modelo histórico
+## Historical model artifact
 
-El archivo `modelo_XGBOOST.joblib` parece haber sido generado con XGBoost 1.4 y
-contiene aproximadamente 51 árboles. Cargar artefactos `joblib` no confiables
-puede ejecutar código; por eso se archiva, pero la ruta recomendada es volver a
-entrenar y guardar el modelo en formato nativo JSON.
+`modelo_XGBOOST.joblib` appears to have been generated with XGBoost 1.4 and
+contains approximately 51 trees. Loading an untrusted `joblib` file can
+execute code. The artifact is archived privately; the recommended path is to
+retrain and save a native JSON model.
 
-## Qué se corrigió en el repositorio público
+## Corrections in the public repository
 
-- nombres y unidades explícitas;
-- pruebas que reproducen la primera fila de cada fórmula histórica;
-- separación ordenada entrenamiento/prueba;
-- ausencia de la variable objetivo entre las entradas;
-- métricas finitas cuando existen objetivos iguales a cero;
-- evaluación de límites configurable, sin copiar tablas normativas;
-- datos, binarios y documentos históricos fuera de Git por defecto.
+- explicit names and units;
+- tests that reproduce the first row of each historical formula;
+- ordered training/test separation;
+- no target among the input features;
+- finite metrics when zero targets exist;
+- configurable limit assessment without copied standards tables;
+- real datasets with English headers;
+- private exclusion of binary and third-party source artifacts.

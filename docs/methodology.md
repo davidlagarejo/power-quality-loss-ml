@@ -1,81 +1,77 @@
-# Metodología reconstruida
+# Reconstructed Methodology
 
-## 1. Fuente
+## 1. Source data
 
-El CSV del analizador contiene tensión fase-neutro, corriente por fase,
-ángulos, potencia activa/aparente/reactiva y factor de potencia. El orden del
-archivo se conserva como secuencia temporal.
+The analyzer CSV contains phase-to-neutral voltage, phase current, phase
+angles, total active/apparent/reactive power, and power factor. Row order is
+preserved as the inherited time sequence.
 
-## 2. Desbalance histórico
+## 2. Historical imbalance calculation
 
-Para las tres fases:
+For the three phases:
 
-1. se calcula el promedio de tensión y corriente;
-2. se calculan las diferencias absolutas AB, BC y CA;
-3. se toma la mayor diferencia de tensión y de corriente;
-4. se multiplican ambas y después se aplica un factor de potencia.
-
-En símbolos:
+1. calculate average voltage and current;
+2. calculate absolute AB, BC, and CA differences;
+3. select the largest voltage and current differences;
+4. multiply both values and then apply power factor.
 
 ```text
 ΔVmax = max(|VA - VB|, |VB - VC|, |VC - VA|)
 ΔImax = max(|IA - IB|, |IB - IC|, |IC - IA|)
 Sproxy = ΔVmax × ΔImax                  [VA]
-Pproxy = Sproxy × FP                    [W]
+Pproxy = Sproxy × PF                    [W]
 Pproxy_kW = Pproxy / 1000               [kW]
 ```
 
-Este cálculo reproduce la hoja histórica, pero no constituye por sí mismo un
-modelo eléctrico validado de pérdidas por desbalance.
+This calculation reproduces the historical workbook but is not, by itself, a
+validated electrical-loss model.
 
-## 3. Corriente neutra
+## 3. Neutral current
 
-La ecuación física implementada es:
+The implemented physical equation is:
 
 ```text
-Pneutro_W = Ineutro² × Rconductor
-Pneutro_kW = Pneutro_W / 1000
+Pneutral_W = Ineutral² × Rconductor
+Pneutral_kW = Pneutral_W / 1000
 ```
 
-Para un resultado defendible se necesita corriente RMS medida en el neutro y
-la resistencia efectiva del conductor a la temperatura/frecuencia aplicable.
-La generación aleatoria del Excel se conserva solo como antecedente.
+A defensible result requires measured neutral RMS current and effective
+conductor resistance at the applicable temperature and frequency. The random
+spreadsheet generation is retained only as historical context.
 
-## 4. Armónicos
+## 4. Harmonics
 
-La hoja original usa valores constantes de 3 % para tensión y 2 % para
-corriente. También mezcla términos con dimensiones incompatibles. El módulo
-`legacy.py` reproduce el número únicamente para trazabilidad y lo llama
-`legacy_harmonic_score`.
+The original workbook uses constant 3% voltage and 2% current values. It also
+mixes terms with incompatible dimensions. `legacy.py` reproduces the numeric
+result for traceability and names it `legacy_harmonic_score`.
 
-Una versión técnica futura necesita al menos:
+A technical second version needs at least:
 
-- espectro de armónicos individuales por fase;
-- THDv medido;
-- TDD de corriente calculado con la corriente máxima de demanda;
-- identificación del PCC;
-- tensión nominal y relación de cortocircuito requeridas por la edición
-  aplicable de la norma;
-- un modelo físico separado para convertir distorsión en pérdidas.
+- individual harmonic spectra by phase;
+- measured voltage THD;
+- current TDD calculated with maximum demand current;
+- formal PCC identification;
+- nominal voltage and short-circuit ratio required by the applicable edition;
+- a separate physical model for converting distortion into loss.
 
-## 5. Conversión económica histórica
+## 5. Historical economic conversion
 
-Las hojas convierten potencia/energía a costos con coeficientes fijos. El
-dataset final contiene valores ya monetizados; por ello el ML no reemplaza las
-ecuaciones físicas y no puede corregir sus supuestos.
+The workbooks convert power/energy proxies into costs using fixed
+coefficients. The final dataset contains values that are already monetized, so
+ML does not replace or correct the physical assumptions.
 
 ## 6. Machine learning
 
-La versión reproducible:
+The reproducible version:
 
-- usa las cuatro columnas de costo como entradas;
-- excluye siempre `costolineabase` de `X`;
-- separa el último 20 % como *holdout* ordenado;
-- conserva hiperparámetros cercanos a los históricos;
-- usa `eval_metric=rmse` y parada temprana;
-- guarda el modelo en formato nativo JSON;
-- informa MAE, RMSE, MAPE no nulo, WAPE y sMAPE.
+- uses four English-named cost columns as inputs;
+- always excludes `baseline_active_energy_cost` from `X`;
+- reserves the final 20% as an ordered holdout;
+- retains parameters close to the historical model;
+- uses `eval_metric=rmse` and early stopping;
+- saves the model in native JSON format;
+- reports MAE, RMSE, R², nonzero-target MAPE, WAPE, and sMAPE.
 
-Como el dataset final perdió `Date` y `Time`, el corte ordenado asume que las
-filas mantienen el orden del CSV. En una siguiente versión deben conservarse
-marcas de tiempo y agrupar las ventanas de evaluación por campaña o instalación.
+Because the historical ML dataset dropped `Date` and `Time`, the ordered split
+assumes its rows retain CSV order. A future version should retain timestamps
+and group evaluation windows by campaign or facility.

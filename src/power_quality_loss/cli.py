@@ -1,4 +1,4 @@
-"""Interfaz de línea de comandos."""
+"""Command-line interface."""
 
 from __future__ import annotations
 
@@ -18,21 +18,21 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pqloss")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    audit = subparsers.add_parser("audit-data", help="Audita una exportación CSV")
+    audit = subparsers.add_parser("audit-data", help="Audit a CSV export")
     audit.add_argument("csv")
 
-    row = subparsers.add_parser("legacy-row", help="Reproduce el cálculo de desbalance")
+    row = subparsers.add_parser("legacy-row", help="Reproduce the imbalance calculation")
     row.add_argument("--voltages", nargs=3, type=float, required=True, metavar=("VA", "VB", "VC"))
     row.add_argument("--currents", nargs=3, type=float, required=True, metavar=("IA", "IB", "IC"))
     row.add_argument("--power-factor", type=float, required=True)
 
-    assess = subparsers.add_parser("assess", help="Compara THD/TDD con límites suministrados")
+    assess = subparsers.add_parser("assess", help="Compare THD/TDD with supplied limits")
     assess.add_argument("--voltage-thd", type=float)
     assess.add_argument("--voltage-thd-limit", type=float)
     assess.add_argument("--current-tdd", type=float)
     assess.add_argument("--current-tdd-limit", type=float)
 
-    train = subparsers.add_parser("train", help="Entrena XGBoost")
+    train = subparsers.add_parser("train", help="Train XGBoost")
     train.add_argument("csv")
     train.add_argument("--model-output", default="models/xgboost_model.json")
     train.add_argument("--report-output", default="reports/model-report.json")
@@ -60,7 +60,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             if measured is not None and limit is not None
         ]
         if not result:
-            raise SystemExit("Debe suministrar una medición y su límite")
+            raise SystemExit("Provide at least one measurement and its limit")
     else:
         result = train_xgboost(
             args.csv,

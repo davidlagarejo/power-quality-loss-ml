@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "power-quality-loss-ml"
 version = "0.1.0"
-description = "Prototipo auditable para analizar pérdidas y costos de calidad de energía con datos de un analizador de red."
+description = "Auditable power-quality loss and cost prototype using power analyzer data and XGBoost."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }

@@ -13,5 +13,5 @@ def test_percentage_assessment_reports_margin():
 def test_context_names_missing_pcc_inputs():
     context = AssessmentContext(point_of_common_coupling_identified=False)
 
-    assert "punto de acoplamiento común (PCC)" in context.missing_requirements()
-    assert "tensión nominal en el PCC" in context.missing_requirements()
+    assert "point of common coupling (PCC)" in context.missing_requirements()
+    assert "nominal voltage at the PCC" in context.missing_requirements()

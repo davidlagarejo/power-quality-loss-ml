@@ -1,12 +1,13 @@
-# Archivo privado local
+# Private Local Archive
 
-`originals/` contiene las fuentes recuperadas del proyecto de 2021. Los dos
-CSV autorizados se copiaron a `data/`; el resto continúa excluido mediante
-`.gitignore`.
+`originals/` contains the recovered 2021 source artifacts. The two authorized
+CSV files were copied into `data/`; all other source artifacts remain excluded
+through `.gitignore`.
 
-No quite esa exclusión hasta confirmar:
+Do not remove that exclusion until all of the following are confirmed:
 
-1. autorización específica para publicar cada archivo adicional;
-2. ausencia de información personal o del cliente;
-3. derechos para redistribuir cada documento;
-4. compatibilidad del modelo serializado con una versión segura de XGBoost.
+1. specific authorization to publish each additional artifact;
+2. absence of personal or confidential client information;
+3. redistribution rights for every document;
+4. safe compatibility of any serialized model with a supported XGBoost
+   version.

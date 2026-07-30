@@ -1,8 +1,8 @@
-"""Reconstrucción explícita de las fórmulas históricas.
+"""Explicit reconstruction of the historical formulas.
 
-Las funciones de este módulo permiten reproducir el prototipo y exponen las
-unidades reales. No convierten por sí solas los resultados en una evaluación
-de conformidad con IEEE 519.
+The functions in this module reproduce the prototype while exposing the
+actual units. They do not turn the results into an IEEE 519 compliance
+assessment.
 """
 
 from __future__ import annotations
@@ -14,14 +14,14 @@ from typing import Iterable
 def _three(values: Iterable[float], name: str) -> tuple[float, float, float]:
     result = tuple(float(value) for value in values)
     if len(result) != 3:
-        raise ValueError(f"{name} debe contener exactamente tres fases")
+        raise ValueError(f"{name} must contain exactly three phases")
     return result  # type: ignore[return-value]
 
 
 def _power_factor(value: float) -> float:
     value = float(value)
     if not 0.0 <= value <= 1.0:
-        raise ValueError("El factor de potencia debe estar entre 0 y 1")
+        raise ValueError("Power factor must be between 0 and 1")
     return value
 
 
@@ -46,12 +46,12 @@ def calculate_legacy_imbalance(
     phase_currents_a: Iterable[float],
     power_factor: float,
 ) -> ImbalanceResult:
-    """Reproduce la hoja ``desbalance.xlsx`` con unidades corregidas.
+    """Reproduce ``desbalance.xlsx`` with corrected units.
 
-    La hoja multiplicaba la mayor diferencia entre fases de tensión por la
-    mayor diferencia entre fases de corriente y por el factor de potencia.
-    El número resultante estaba rotulado como kW, pero dimensionalmente queda
-    en W; por eso se informan ambas magnitudes.
+    The workbook multiplied the largest phase-to-phase voltage difference by
+    the largest phase-to-phase current difference and by power factor. The
+    result was labeled as kW, although its dimensional unit is W; both units
+    are therefore reported explicitly.
     """
 
     voltages = _three(phase_voltages_v, "phase_voltages_v")
@@ -61,7 +61,7 @@ def calculate_legacy_imbalance(
     average_voltage = sum(voltages) / 3.0
     average_current = sum(currents) / 3.0
     if average_voltage == 0.0 or average_current == 0.0:
-        raise ValueError("Los promedios de tensión y corriente deben ser distintos de cero")
+        raise ValueError("Average voltage and current must be nonzero")
 
     voltage_pair_differences = (
         abs(voltages[0] - voltages[1]),
@@ -108,20 +108,20 @@ def calculate_neutral_conductor_loss(
     conductor_resistance_ohm: float,
     power_factor: float = 1.0,
 ) -> NeutralLossResult:
-    """Calcula pérdida resistiva ``I²R`` a partir de corriente medida.
+    """Calculate resistive ``I²R`` loss from a measured current.
 
-    La hoja histórica generaba la corriente del neutro de forma aleatoria y
-    multiplicaba después por el factor de potencia. Aquí se exige una medición
-    explícita y se conserva el valor ajustado únicamente para comparación.
+    The historical workbook generated neutral current randomly and then
+    multiplied the result by power factor. This function requires an explicit
+    measurement and retains the adjusted value only for comparison.
     """
 
     neutral_current_a = float(neutral_current_a)
     conductor_resistance_ohm = float(conductor_resistance_ohm)
     power_factor = _power_factor(power_factor)
     if neutral_current_a < 0.0:
-        raise ValueError("La corriente del neutro no puede ser negativa")
+        raise ValueError("Neutral current cannot be negative")
     if conductor_resistance_ohm < 0.0:
-        raise ValueError("La resistencia no puede ser negativa")
+        raise ValueError("Resistance cannot be negative")
 
     loss_w = neutral_current_a**2 * conductor_resistance_ohm
     return NeutralLossResult(
@@ -151,10 +151,10 @@ def calculate_legacy_harmonic_score(
     current_thd_fraction: Iterable[float] = (0.02, 0.02, 0.02),
     power_factor: float = 1.0,
 ) -> HarmonicLegacyResult:
-    """Reproduce el indicador de ``harmonicos.xlsx``.
+    """Reproduce the indicator from ``harmonicos.xlsx``.
 
-    La fórmula original mezcla V, A y fracciones adimensionales, por lo que el
-    resultado es un *score* histórico y no una potencia física en kW.
+    The original formula mixes V, A, and dimensionless fractions, so its
+    result is a historical score rather than physical power in kW.
     """
 
     voltages = _three(phase_voltages_v, "phase_voltages_v")
@@ -164,12 +164,12 @@ def calculate_legacy_harmonic_score(
     power_factor = _power_factor(power_factor)
 
     if any(value < 0.0 for value in (*voltage_thd, *current_thd)):
-        raise ValueError("Los valores THD no pueden ser negativos")
+        raise ValueError("THD values cannot be negative")
 
     average_voltage = sum(voltages) / 3.0
     average_current = sum(currents) / 3.0
 
-    # Orden y referencias reconstruidos de las columnas P:V del Excel.
+    # Order and references reconstructed from spreadsheet columns P:V.
     mixed_voltage_terms = (
         average_voltage * voltage_thd[0],
         average_current * current_thd[0],

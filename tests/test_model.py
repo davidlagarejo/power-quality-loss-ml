@@ -7,7 +7,7 @@ from power_quality_loss.model import FEATURE_COLUMNS, ordered_holdout, regressio
 
 def test_ordered_holdout_preserves_order():
     features = pd.DataFrame({column: range(10) for column in FEATURE_COLUMNS})
-    target = pd.Series(range(10), name="costolineabase")
+    target = pd.Series(range(10), name="baseline_active_energy_cost")
 
     x_train, x_test, y_train, y_test = ordered_holdout(features, target, 0.2)
 
